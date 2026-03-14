@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Le Carrousel de la Fête</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins',sans-serif;background:#0A0A0F;color:#fff;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 3rem;transition:all .4s}
+nav.scrolled{background:rgba(10,10,15,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,215,0,.1);box-shadow:0 4px 30px rgba(0,0,0,.5)}
+.logo{display:flex;align-items:center;gap:.8rem}
+.logo-icon{width:44px;height:44px;background:linear-gradient(135deg,#6C22A6,#E91E8C);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.logo-text{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;background:linear-gradient(135deg,#FFD700,#FF8C00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo-sub{font-size:.6rem;color:#8888AA;letter-spacing:3px;text-transform:uppercase}
+.nav-links{display:flex;align-items:center;gap:.2rem;list-style:none}
+.nav-links a{padding:.5rem 1rem;border-radius:50px;font-size:.85rem;color:rgba(255,255,255,.8);transition:all .3s}
+.nav-links a:hover{color:#fff;background:rgba(255,255,255,.07)}
+.nav-cta{background:linear-gradient(135deg,#FFD700,#FF8C00)!important;color:#0A0A0F!important;font-weight:700!important;padding:.6rem 1.4rem!important;border-radius:50px;box-shadow:0 4px 20px rgba(255,215,0,.3)}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.burger span{width:25px;height:2px;background:#fff;border-radius:2px;display:block;transition:all .3s}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mob-menu{position:fixed;inset:0;background:rgba(10,10,15,.97);backdrop-filter:blur(30px);display:flex;align-items:center;justify-content:center;z-index:999;opacity:0;visibility:hidden;transition:all .4s}
+.mob-menu.open{opacity:1;visibility:visible}
+.mob-menu ul{list-style:none;text-align:center}
+.mob-menu ul li{margin:1.5rem 0}
+.mob-menu ul li a{font-family:'Playfair Display',serif;font-size:1.8rem;color:#fff;transition:all .3s}
+.mob-menu ul li a:hover{background:linear-gradient(135deg,#FFD700,#FF8C00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem;position:relative;overflow:hidden;background:linear-gradient(rgba(10,10,15,.7),rgba(10,10,15,.85)),url('Image/Carrousel-devanture.jpg') center/cover no-repeat}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+.orb1{width:500px;height:500px;background:radial-gradient(circle,rgba(108,34,166,.5),transparent 70%);top:-150px;left:-150px;animation:float 8s ease-in-out infinite}
+.orb2{width:400px;height:400px;background:radial-gradient(circle,rgba(233,30,140,.4),transparent 70%);top:40%;right:-100px;animation:float 8s ease-in-out -3s infinite}
+.orb3{width:350px;height:350px;background:radial-gradient(circle,rgba(255,215,0,.25),transparent 70%);bottom:-50px;left:30%;animation:float 8s ease-in-out -5s infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-25px)}}
+.hero-content{position:relative;z-index:2;max-width:850px}
+.eyebrow{display:inline-flex;align-items:center;gap:.6rem;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.25);color:#FFD700;padding:.4rem 1.2rem;border-radius:50px;font-size:.75rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.8rem;animation:fadeUp .8s ease}
+.dot{width:6px;height:6px;background:#FFD700;border-radius:50%;animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,7vw,5rem);font-weight:900;line-height:1.05;margin-bottom:1.4rem;animation:fadeUp .8s ease .15s both}
+.grad{background:linear-gradient(135deg,#6C22A6,#E91E8C 50%,#FFD700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block}
+.hero p{color:rgba(255,255,255,.75);font-size:clamp(.95rem,2vw,1.15rem);line-height:1.7;max-width:540px;margin:0 auto 2.4rem;animation:fadeUp .8s ease .3s both}
+.btns{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;animation:fadeUp .8s ease .45s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+.btn-gold{display:inline-flex;align-items:center;gap:.6rem;background:linear-gradient(135deg,#FFD700,#FF8C00);color:#0A0A0F;padding:.9rem 2rem;border-radius:50px;font-weight:700;font-size:.95rem;box-shadow:0 8px 28px rgba(255,215,0,.4);transition:all .3s}
+.btn-gold:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(255,215,0,.6)}
+.btn-outline{display:inline-flex;align-items:center;gap:.6rem;border:1.5px solid rgba(255,255,255,.2);color:#fff;padding:.9rem 2rem;border-radius:50px;font-size:.95rem;background:rgba(255,255,255,.04);backdrop-filter:blur(10px);transition:all .3s}
+.btn-outline:hover{border-color:rgba(255,215,0,.5);transform:translateY(-4px)}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,.3);font-size:.68rem;letter-spacing:3px;text-transform:uppercase}
+.scroll-line{width:1px;height:45px;background:linear-gradient(to bottom,rgba(255,215,0,.6),transparent);animation:scrl 2s ease infinite}
+@keyframes scrl{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+.marquee{background:linear-gradient(135deg,#6C22A6,#E91E8C);padding:.8rem 0;overflow:hidden}
+.mq-track{display:flex;gap:3rem;animation:mq 22s linear infinite;white-space:nowrap}
+.mq-track span{font-size:.78rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.9);display:flex;align-items:center;gap:.8rem;flex-shrink:0}
+.mq-track i{color:#FFD700;font-size:.7rem}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+section{padding:6rem 2rem}
+.container{max-width:1200px;margin:0 auto}
+.section-tag{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.2);color:#FFD700;padding:.35rem 1rem;border-radius:50px;font-size:.73rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:1rem}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.7rem);font-weight:900;line-height:1.15;margin-bottom:.8rem}
+.section-title em{font-style:normal;background:linear-gradient(135deg,#6C22A6,#E91E8C 50%,#FFD700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.section-desc{color:#8888AA;font-size:.95rem;line-height:1.75;max-width:540px}
+.text-center{text-align:center}.text-center .section-desc{margin:0 auto}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.reveal.visible{opacity:1;transform:none}
+
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.about-img{width:100%;height:460px;object-fit:cover;border-radius:22px;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.about-img-wrap{position:relative}
+.badge{position:absolute;top:24px;left:-20px;background:linear-gradient(135deg,#6C22A6,#E91E8C);padding:1.2rem 1.4rem;border-radius:16px;text-align:center;box-shadow:0 0 40px rgba(108,34,166,.4)}
+.badge-num{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;display:block}
+.badge-lbl{font-size:.65rem;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:2px}
+.pills{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.6rem 0}
+.pill{display:inline-flex;align-items:center;gap:.45rem;background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.15);color:rgba(255,255,255,.85);padding:.42rem 1rem;border-radius:50px;font-size:.78rem;font-weight:500;transition:all .3s}
+.pill:hover{background:rgba(255,215,0,.15);border-color:#FFD700;color:#FFD700;transform:translateY(-2px)}
+.pill i{color:#FFD700}
+
+.stats-section{background:#111118;padding:3rem 2rem;border-top:1px solid rgba(255,215,0,.06);border-bottom:1px solid rgba(255,215,0,.06)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;max-width:1200px;margin:0 auto}
+.stat-card{text-align:center;padding:1.8rem 1rem;background:linear-gradient(145deg,#1A1A28,#111118);border:1px solid rgba(255,215,0,.06);border-radius:18px;transition:all .3s}
+.stat-card:hover{transform:translateY(-5px);border-color:rgba(255,215,0,.2);box-shadow:0 0 40px rgba(255,215,0,.15)}
+.stat-icon{font-size:1.8rem;margin-bottom:.8rem;display:block}
+.stat-num{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,#FFD700,#FF8C00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.2rem}
+.stat-label{font-size:.75rem;color:#8888AA;text-transform:uppercase;letter-spacing:2px}
+
+.gallery-section{background:#111118}
+.filter-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin:2rem 0}
+.filter-btn{padding:.4rem 1.2rem;border-radius:50px;border:1.5px solid rgba(255,215,0,.2);background:transparent;color:rgba(255,255,255,.6);font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;transition:all .3s}
+.filter-btn:hover,.filter-btn.active{background:linear-gradient(135deg,#FFD700,#FF8C00);border-color:transparent;color:#0A0A0F;font-weight:700;box-shadow:0 4px 20px rgba(255,215,0,.3)}
+.gallery-grid{columns:3;gap:1rem}
+.gallery-item{break-inside:avoid;margin-bottom:1rem;border-radius:14px;overflow:hidden;position:relative;cursor:pointer;transition:all .3s}
+.gallery-item:hover{transform:scale(1.02);box-shadow:0 20px 40px rgba(0,0,0,.5)}
+.gallery-item img{width:100%;display:block;transition:transform .5s}
+.gallery-item:hover img{transform:scale(1.06)}
+.gallery-overlay{position:absolute;inset:0;background:rgba(108,34,166,0);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;transition:all .3s}
+.gallery-item:hover .gallery-overlay{background:rgba(108,34,166,.65)}
+.gallery-overlay i{color:#fff;font-size:1.6rem;opacity:0;transform:scale(.5);transition:all .3s}
+.gallery-overlay span{color:#fff;font-size:.74rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;opacity:0;transform:translateY(8px);transition:all .3s .05s}
+.gallery-item:hover .gallery-overlay i{opacity:1;transform:scale(1)}
+.gallery-item:hover .gallery-overlay span{opacity:1;transform:none}
+
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.96);backdrop-filter:blur(20px);z-index:99998;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all .4s}
+.lightbox.open{opacity:1;visibility:visible}
+.lb-inner{position:relative}
+.lb-inner img{max-width:90vw;max-height:85vh;border-radius:14px;box-shadow:0 40px 80px rgba(0,0,0,.8)}
+.lb-close{position:absolute;top:-44px;right:0;width:40px;height:40px;background:rgba(255,255,255,.1);border:none;color:#fff;border-radius:50%;font-size:1rem;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center}
+.lb-close:hover{background:#E91E8C}
+.lb-caption{position:absolute;bottom:-32px;left:0;right:0;text-align:center;color:rgba(255,255,255,.5);font-size:.8rem}
+.lb-prev,.lb-next{position:fixed;top:50%;transform:translateY(-50%);width:46px;height:46px;background:rgba(255,255,255,.1);border:none;color:#fff;border-radius:50%;font-size:1rem;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center}
+.lb-prev{left:1rem}.lb-next{right:1rem}
+.lb-prev:hover,.lb-next:hover{background:linear-gradient(135deg,#FFD700,#FF8C00);color:#0A0A0F}
+
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin-top:3rem}
+.service-card{background:linear-gradient(145deg,#1A1A28,#111118);border:1px solid rgba(255,255,255,.05);border-radius:20px;padding:2rem;transition:all .3s;position:relative;overflow:hidden}
+.service-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(135deg,#6C22A6,#E91E8C,#FFD700);transform:scaleX(0);transform-origin:left;transition:.4s}
+.service-card:hover{transform:translateY(-5px);border-color:rgba(255,215,0,.18);box-shadow:0 20px 40px rgba(0,0,0,.3)}
+.service-card:hover::after{transform:scaleX(1)}
+.service-icon{font-size:2.2rem;margin-bottom:1.2rem;display:block}
+.service-card h3{font-size:.98rem;font-weight:700;margin-bottom:.7rem}
+.service-card p{color:#8888AA;font-size:.84rem;line-height:1.7}
+
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin-top:3rem}
+.testi-card{background:linear-gradient(145deg,#1A1A28,#111118);border:1px solid rgba(255,255,255,.05);border-radius:20px;padding:1.7rem;transition:all .3s}
+.testi-card:hover{transform:translateY(-5px);border-color:rgba(255,215,0,.18);box-shadow:0 0 40px rgba(255,215,0,.1)}
+.stars{color:#FFD700;font-size:.85rem;margin-bottom:1rem}
+.testi-text{color:rgba(255,255,255,.7);font-size:.88rem;line-height:1.75;margin-bottom:1.3rem;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:.8rem}
+.avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#6C22A6,#E91E8C);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;font-size:.85rem}
+.author-name{font-weight:600;font-size:.86rem}
+.author-date{font-size:.74rem;color:#8888AA}
+
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+.contact-info{display:flex;flex-direction:column;gap:1.2rem;margin:1.8rem 0}
+.contact-row{display:flex;align-items:center;gap:1rem;background:linear-gradient(145deg,#1A1A28,#111118);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:1.2rem;transition:all .3s}
+.contact-row:hover{border-color:rgba(255,215,0,.2);transform:translateX(5px)}
+.contact-icon{width:44px;height:44px;background:rgba(255,215,0,.08);border-radius:11px;display:flex;align-items:center;justify-content:center;color:#FFD700;font-size:1rem;flex-shrink:0;transition:all .3s}
+.contact-row:hover .contact-icon{background:linear-gradient(135deg,#FFD700,#FF8C00);color:#0A0A0F}
+.contact-label{font-size:.72rem;color:#8888AA;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.2rem}
+.contact-value{font-size:.92rem;font-weight:500}
+.contact-value a{color:#fff;transition:all .3s}
+.contact-value a:hover{color:#FFD700}
+.hours-title{font-size:.78rem;font-weight:700;color:#FFD700;text-transform:uppercase;letter-spacing:2px;margin-top:.8rem;margin-bottom:.7rem}
+.hour-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.86rem}
+.hour-day{color:rgba(255,255,255,.7)}
+.hour-time{color:#fff;font-weight:500}
+.hour-closed{color:#8888AA;font-style:italic}
+.map-wrap{border-radius:20px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.map-wrap iframe{width:100%;height:400px;border:none;display:block}
+
+.cta-section{background:#111118;padding:7rem 2rem;text-align:center;position:relative;overflow:hidden;border-top:1px solid rgba(255,215,0,.06)}
+.cta-orb{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(108,34,166,.35),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+
+footer{background:#07070D;padding:4rem 2rem 2rem;border-top:1px solid rgba(255,255,255,.04)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;max-width:1200px;margin:0 auto 3rem}
+.footer-desc{color:#8888AA;font-size:.84rem;line-height:1.7;margin:1rem 0 1.4rem}
+.footer-socials{display:flex;gap:.6rem}
+.footer-socials a{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#8888AA;transition:all .3s;font-size:.84rem}
+.footer-socials a:hover{background:linear-gradient(135deg,#6C22A6,#E91E8C);color:#fff;border-color:transparent;transform:translateY(-3px)}
+.footer-col h4{font-size:.85rem;font-weight:700;margin-bottom:1rem;color:#FFD700}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:.6rem}
+.footer-col ul li a{color:#8888AA;font-size:.84rem;transition:all .3s}
+.footer-col ul li a:hover{color:#fff;padding-left:4px}
+.footer-bottom{max-width:1200px;margin:0 auto;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-bottom p{color:#8888AA;font-size:.78rem}
+.footer-bottom span{color:#FFD700}
+
+@media(max-width:1024px){
+  .about-grid,.contact-grid{grid-template-columns:1fr}
+  .services-grid,.testi-grid{grid-template-columns:1fr 1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .gallery-grid{columns:2}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  .burger{display:flex}
+  .services-grid,.testi-grid{grid-template-columns:1fr}
+  section{padding:4rem 1.5rem}
+  .gallery-grid{columns:1}
+  .footer-grid{grid-template-columns:1fr}
+  .badge{display:none}
+}
+@media(max-width:480px){.btns{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-prev" id="lb-prev"><i class="fas fa-chevron-left"></i></button>
+  <div class="lb-inner">
+    <button class="lb-close" id="lb-close"><i class="fas fa-times"></i></button>
+    <img src="" alt="" id="lb-img">
+    <div class="lb-caption" id="lb-caption"></div>
+  </div>
+  <button class="lb-next" id="lb-next"><i class="fas fa-chevron-right"></i></button>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="#" class="logo">
+    <div class="logo-icon">🎪</div>
+    <div>
+      <div class="logo-text">Le Carrousel</div>
+      <div class="logo-sub">de la Fête</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">À propos</a></li>
+    <li><a href="#gallery">Galerie</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="tel:+3264570260" class="nav-cta"><i class="fas fa-phone"></i> Appeler</a></li>
+  </ul>
+  <button class="burger" id="burger"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mob-menu">
+  <ul>
+    <li><a href="#about" class="mob-link">À propos</a></li>
+    <li><a href="#gallery" class="mob-link">Galerie</a></li>
+    <li><a href="#services" class="mob-link">Services</a></li>
+    <li><a href="#contact" class="mob-link">Contact</a></li>
+    <li><a href="tel:+3264570260" class="mob-link" style="color:#FFD700">📞 Appeler</a></li>
+  </ul>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="hero-content">
+    <div class="eyebrow"><span class="dot"></span>Boutique de fête à Braine-Le-Comte<span class="dot"></span></div>
+    <h1>Bienvenue au<span class="grad">Carrousel de la Fête</span></h1>
+    <p>Costumes, ballons personnalisés, feux d'artifice et accessoires de fête. Votre spécialiste en Belgique depuis plus de 10 ans.</p>
+    <div class="btns">
+      <a href="#gallery" class="btn-gold"><i class="fas fa-images"></i> Voir nos créations</a>
+      <a href="#contact" class="btn-outline"><i class="fas fa-map-marker-alt"></i> Nous trouver</a>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>Scroll</span><div class="scroll-line"></div></div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="mq-track">
+    <span><i class="fas fa-star"></i>Costumes</span>
+    <span><i class="fas fa-star"></i>Ballons Personnalisés</span>
+    <span><i class="fas fa-star"></i>Mariages</span>
+    <span><i class="fas fa-star"></i>Anniversaires</span>
+    <span><i class="fas fa-star"></i>Baby Shower</span>
+    <span><i class="fas fa-star"></i>Gender Reveal</span>
+    <span><i class="fas fa-star"></i>Feux d'Artifice</span>
+    <span><i class="fas fa-star"></i>Halloween</span>
+    <span><i class="fas fa-star"></i>Carnaval</span>
+    <span><i class="fas fa-star"></i>Costumes</span>
+    <span><i class="fas fa-star"></i>Ballons Personnalisés</span>
+    <span><i class="fas fa-star"></i>Mariages</span>
+    <span><i class="fas fa-star"></i>Anniversaires</span>
+    <span><i class="fas fa-star"></i>Baby Shower</span>
+    <span><i class="fas fa-star"></i>Gender Reveal</span>
+    <span><i class="fas fa-star"></i>Feux d'Artifice</span>
+    <span><i class="fas fa-star"></i>Halloween</span>
+    <span><i class="fas fa-star"></i>Carnaval</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img-wrap reveal">
+        <img class="about-img" src="Image/devanture magasin.webp" alt="Devanture Le Carrousel de la Fête">
+        <div class="badge">
+          <span class="badge-num">+10</span>
+          <span class="badge-lbl">Ans d'expérience</span>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="section-tag">✦ Notre histoire</div>
+        <h2 class="section-title">Passionnés de fête<br>depuis <em>plus de 10 ans</em></h2>
+        <p class="section-desc">Le Carrousel de la Fête est votre boutique de référence à Braine-Le-Comte. Nous mettons notre passion et expertise à votre service pour chaque occasion.</p>
+        <p class="section-desc" style="margin-top:.9rem">Spécialisés dans les montages ballons sur mesure, nous créons des décors uniques pour mariages, anniversaires, baby showers, gender reveal et bien plus encore.</p>
+        <div class="pills">
+          <span class="pill"><i class="fas fa-mask"></i> Costumes</span>
+          <span class="pill"><i class="fas fa-birthday-cake"></i> Anniversaires</span>
+          <span class="pill"><i class="fas fa-ring"></i> Mariages</span>
+          <span class="pill"><i class="fas fa-baby"></i> Baby Shower</span>
+          <span class="pill"><i class="fas fa-ghost"></i> Halloween</span>
+          <span class="pill"><i class="fas fa-fire"></i> Feux d'artifice</span>
+        </div>
+        <a href="#gallery" class="btn-gold">Voir nos réalisations <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-card reveal"><span class="stat-icon">🎭</span><div class="stat-num">500+</div><div class="stat-label">Costumes</div></div>
+    <div class="stat-card reveal"><span class="stat-icon">🎈</span><div class="stat-num">∞</div><div class="stat-label">Créations ballons</div></div>
+    <div class="stat-card reveal"><span class="stat-icon">⭐</span><div class="stat-num">5★</div><div class="stat-label">Avis clients</div></div>
+    <div class="stat-card reveal"><span class="stat-icon">🎉</span><div class="stat-num">+10</div><div class="stat-label">Ans de passion</div></div>
+  </div>
+</div>
+
+<!-- GALERIE -->
+<section class="gallery-section" id="gallery">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-tag">✦ Nos réalisations</div>
+      <h2 class="section-title">Notre <em>galerie</em></h2>
+      <p class="section-desc">Découvrez quelques-unes de nos créations et laissez-vous inspirer pour votre prochain événement.</p>
+    </div>
+    <div class="filter-btns">
+      <button class="filter-btn active" data-filter="all">Tout voir</button>
+      <button class="filter-btn" data-filter="mariage">Mariage</button>
+      <button class="filter-btn" data-filter="anniversaire">Anniversaire</button>
+      <button class="filter-btn" data-filter="naissance">Naissance & Baby Shower</button>
+      <button class="filter-btn" data-filter="ballon">Montages Ballons</button>
+    </div>
+    <div class="gallery-grid" id="gallery-grid">
+
+      <!-- MARIAGES -->
+      <div class="gallery-item" data-cat="mariage">
+        <img src="Image/IMG_2141.jpg" alt="Arche ballons mariage rose gold">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Mariage</span></div>
+      </div>
+      <div class="gallery-item" data-cat="mariage">
+        <img src="Image/IMG_2140.jpg" alt="Décoration mariage ballons rouges">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Mariage</span></div>
+      </div>
+      <div class="gallery-item" data-cat="mariage">
+        <img src="Image/IMG_2142.jpg" alt="Montage ballons mariage élégant">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Mariage</span></div>
+      </div>
+      <div class="gallery-item" data-cat="mariage">
+        <img src="Image/IMG_2138.jpg" alt="Arche coeur ballons mariage extérieur">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Mariage</span></div>
+      </div>
+
+      <!-- ANNIVERSAIRES -->
+      <div class="gallery-item" data-cat="anniversaire">
+        <img src="Image/Anniversaire.PNG" alt="Décoration anniversaire ballons">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Anniversaire</span></div>
+      </div>
+      <div class="gallery-item" data-cat="anniversaire">
+        <img src="Image/Anniversaire2.PNG" alt="Ballons chiffres anniversaire argent">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Anniversaire</span></div>
+      </div>
+      <div class="gallery-item" data-cat="anniversaire">
+        <img src="Image/Anniversaire3.PNG" alt="Arche ronde anniversaire colorée">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Anniversaire</span></div>
+      </div>
+      <div class="gallery-item" data-cat="anniversaire">
+        <img src="Image/ballon-50-ans.jpg" alt="Ballons 50 ans">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Anniversaire</span></div>
+      </div>
+      <div class="gallery-item" data-cat="anniversaire">
+        <img src="Image/ballon-60-ans.jpg" alt="Ballons 60 ans rose gold">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Anniversaire</span></div>
+      </div>
+
+      <!-- NAISSANCE & BABY SHOWER -->
+      <div class="gallery-item" data-cat="naissance">
+        <img src="Image/Naissance.PNG" alt="Décoration naissance ballons">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Naissance</span></div>
+      </div>
+      <div class="gallery-item" data-cat="naissance">
+        <img src="Image/Naissance2.PNG" alt="Baby shower ballons roses">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Naissance</span></div>
+      </div>
+      <div class="gallery-item" data-cat="naissance">
+        <img src="Image/Naissance3.PNG" alt="Décoration naissance garçon">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Naissance</span></div>
+      </div>
+      <div class="gallery-item" data-cat="naissance">
+        <img src="Image/Naissance4.PNG" alt="Baby shower bleu garçon">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Naissance</span></div>
+      </div>
+      <div class="gallery-item" data-cat="naissance">
+        <img src="Image/Naissance5.PNG" alt="Ballon chiffre 5 anniversaire enfant">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Naissance</span></div>
+      </div>
+      <div class="gallery-item" data-cat="naissance">
+        <img src="Image/Naissance6.PNG" alt="Ballons 18 ans">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Naissance</span></div>
+      </div>
+      <div class="gallery-item" data-cat="naissance">
+        <img src="Image/Niassance1.PNG" alt="Décoration baby shower montgolfière">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Naissance</span></div>
+      </div>
+      <div class="gallery-item" data-cat="naissance">
+        <img src="Image/BabyShower.PNG" alt="Baby shower décoration complète">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Baby Shower</span></div>
+      </div>
+      <div class="gallery-item" data-cat="naissance">
+        <img src="Image/ballon-garcon.jpg" alt="Ballons naissance garçon">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Naissance</span></div>
+      </div>
+
+      <!-- MONTAGES BALLONS -->
+      <div class="gallery-item" data-cat="ballon">
+        <img src="Image/photo_ballon_page_principale.jpg" alt="Montage ballons sur mesure">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Montage Ballons</span></div>
+      </div>
+      <div class="gallery-item" data-cat="ballon">
+        <img src="Image/Montage_ballon.webp" alt="Montage ballons colorés">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Montage Ballons</span></div>
+      </div>
+      <div class="gallery-item" data-cat="ballon">
+        <img src="Image/Montage-ballon-1-an.jpg" alt="Montage ballons 1 an">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Montage Ballons</span></div>
+      </div>
+      <div class="gallery-item" data-cat="ballon">
+        <img src="Image/arche-ballon.jpg" alt="Arche de ballons">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Montage Ballons</span></div>
+      </div>
+      <div class="gallery-item" data-cat="ballon">
+        <img src="Image/photo_montage_ballon.jpg" alt="Photo montage ballon">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Montage Ballons</span></div>
+      </div>
+      <div class="gallery-item" data-cat="ballon">
+        <img src="Image/thumbnail_10000 12728.jpg" alt="Création ballons unique">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Montage Ballons</span></div>
+      </div>
+      <div class="gallery-item" data-cat="ballon">
+        <img src="Image/thumbnail_InCollage_20250702_144018866.jpg" alt="Collage créations ballons">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Montage Ballons</span></div>
+      </div>
+      <div class="gallery-item" data-cat="ballon">
+        <img src="Image/F1E02ABB-53A1-4763-AD2F-1FB4BBC7F9C4.PNG" alt="Décoration ballons événement">
+        <div class="gallery-overlay"><i class="fas fa-expand"></i><span>Montage Ballons</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-tag">✦ Ce que nous faisons</div>
+      <h2 class="section-title">Nos <em>services</em></h2>
+      <p class="section-desc">Tout ce qu'il vous faut pour une fête réussie, au même endroit.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <span class="service-icon">🎭</span>
+        <h3>Location & Vente de Costumes</h3>
+        <p>Un choix immense pour tous les thèmes, toutes les tailles et tous les âges. Conseils personnalisés inclus.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-icon">🎈</span>
+        <h3>Montages Ballons Personnalisés</h3>
+        <p>Arches, colonnes, bouquets, arches rondes… Créations uniques et entièrement sur mesure pour votre événement.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-icon">🎆</span>
+        <h3>Feux d'Artifice & Effets Scéniques</h3>
+        <p>Spectacles pyrotechniques pour illuminer vos soirées. Disponibles pour particuliers et professionnels.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-icon">👶</span>
+        <h3>Baby Shower & Gender Reveal</h3>
+        <p>Décorations thématiques pour accueillir bébé : montgolfières, arches colorées, ballons surprise…</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-icon">🎂</span>
+        <h3>Anniversaires & Événements</h3>
+        <p>Ballons chiffres géants, arches rondes, colonnes… Chaque anniversaire mérite un décor exceptionnel.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-icon">💍</span>
+        <h3>Mariages & Réceptions</h3>
+        <p>Décoration élégante pour votre grand jour : arches fleuries, ballons transparents, compositions sur mesure.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEMOIGNAGES -->
+<section style="background:#111118">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-tag">✦ Ils nous font confiance</div>
+      <h2 class="section-title">Avis de nos <em>clients</em></h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Décoration de mariage absolument magnifique ! L'arche de ballons était exactement comme nous l'imaginions. Merci pour votre professionnalisme !"</p>
+        <div class="testi-author">
+          <div class="avatar">S</div>
+          <div><div class="author-name">Sophie M.</div><div class="author-date">Mariage · 2024</div></div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Super boutique ! Le personnel est aux petits soins et le choix de costumes est incroyable. On reviendra chaque année pour Halloween !"</p>
+        <div class="testi-author">
+          <div class="avatar">T</div>
+          <div><div class="author-name">Thomas D.</div><div class="author-date">Halloween · 2024</div></div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Baby shower de rêve grâce au Carrousel ! Les ballons personnalisés étaient splendides. Je recommande vivement à toutes les futures mamans !"</p>
+        <div class="testi-author">
+          <div class="avatar">A</div>
+          <div><div class="author-name">Amandine L.</div><div class="author-date">Baby Shower · 2024</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="reveal">
+        <div class="section-tag">✦ Venez nous voir</div>
+        <h2 class="section-title">Contactez-<em>nous</em></h2>
+        <p class="section-desc">Nous sommes à votre disposition pour répondre à toutes vos questions et créer l'événement de vos rêves.</p>
+        <div class="contact-info">
+          <div class="contact-row">
+            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div>
+              <div class="contact-label">Adresse</div>
+              <div class="contact-value">Rue de la Station 3, 7090 Braine-Le-Comte</div>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-icon"><i class="fas fa-phone"></i></div>
+            <div>
+              <div class="contact-label">Téléphone</div>
+              <div class="contact-value"><a href="tel:+3264570260">+32 64 57 02 60</a></div>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+            <div>
+              <div class="contact-label">Email</div>
+              <div class="contact-value"><a href="mailto:info@lecarrousel.be">info@lecarrousel.be</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="hours-title">Heures d'ouverture</div>
+        <div class="hour-row"><span class="hour-day">Lundi</span><span class="hour-closed">Fermé</span></div>
+        <div class="hour-row"><span class="hour-day">Mardi – Vendredi</span><span class="hour-time">10h – 18h</span></div>
+        <div class="hour-row"><span class="hour-day">Samedi</span><span class="hour-time">10h – 17h</span></div>
+        <div class="hour-row"><span class="hour-day">Dimanche</span><span class="hour-closed">Fermé</span></div>
+      </div>
+      <div class="reveal">
+        <div class="map-wrap">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2527.234!2d4.135!3d50.6078!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c25b123456789%3A0x0!2sBraine-le-Comte!5e0!3m2!1sfr!2sbe!4v1" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-orb"></div>
+  <div class="container" style="position:relative;z-index:2">
+    <div class="section-tag" style="margin-bottom:1.4rem">✦ Prêts à faire la fête ?</div>
+    <h2 class="section-title" style="max-width:580px;margin:0 auto 1rem">Créons ensemble votre <em>moment magique</em></h2>
+    <p class="section-desc" style="text-align:center;margin:0 auto 2.4rem">Contactez-nous dès aujourd'hui et laissez-nous transformer votre événement en souvenir inoubliable.</p>
+    <div class="btns">
+      <a href="tel:+3264570260" class="btn-gold"><i class="fas fa-phone"></i> Nous appeler</a>
+      <a href="#gallery" class="btn-outline"><i class="fas fa-images"></i> Voir la galerie</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="logo">
+        <div class="logo-icon">🎪</div>
+        <div><div class="logo-text">Le Carrousel</div><div class="logo-sub">de la Fête</div></div>
+      </div>
+      <p class="footer-desc">Votre boutique de fête et de costumes à Braine-Le-Comte. Passionnés par la magie des moments partagés depuis plus de 10 ans.</p>
+      <div class="footer-socials">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-tiktok"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="#home">Accueil</a></li>
+        <li><a href="#about">À propos</a></li>
+        <li><a href="#gallery">Galerie</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#">Costumes</a></li>
+        <li><a href="#">Ballons sur mesure</a></li>
+        <li><a href="#">Mariages</a></li>
+        <li><a href="#">Baby Shower</a></li>
+        <li><a href="#">Feux d'artifice</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:+3264570260">+32 64 57 02 60</a></li>
+        <li><a href="mailto:info@lecarrousel.be">info@lecarrousel.be</a></li>
+        <li><a href="#">Rue de la Station 3</a></li>
+        <li><a href="#">7090 Braine-Le-Comte</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 <span>Le Carrousel de la Fête</span>. Tous droits réservés.</p>
+    <p>Fait avec <span>♥</span> à Braine-Le-Comte</p>
+  </div>
+</footer>
+
+<script>
+// NAVBAR
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>50));
+
+// BURGER
+const burger = document.getElementById('burger');
+const mobMenu = document.getElementById('mob-menu');
+burger.addEventListener('click',()=>{
+  burger.classList.toggle('open');
+  mobMenu.classList.toggle('open');
+  document.body.style.overflow = mobMenu.classList.contains('open')?'hidden':'';
+});
+document.querySelectorAll('.mob-link').forEach(l=>l.addEventListener('click',()=>{
+  burger.classList.remove('open');
+  mobMenu.classList.remove('open');
+  document.body.style.overflow='';
+}));
+
+// REVEAL
+const obs = new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// FILTER
+const filterBtns = document.querySelectorAll('.filter-btn');
+const galleryItems = document.querySelectorAll('.gallery-item');
+filterBtns.forEach(btn=>btn.addEventListener('click',()=>{
+  filterBtns.forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const f = btn.dataset.filter;
+  galleryItems.forEach(item=>{
+    item.style.display = (f==='all'||item.dataset.cat===f)?'block':'none';
+  });
+}));
+
+// LIGHTBOX
+const lb = document.getElementById('lightbox');
+const lbImg = document.getElementById('lb-img');
+const lbCap = document.getElementById('lb-caption');
+let curIdx=0, visItems=[];
+
+function openLB(idx){
+  visItems=[...galleryItems].filter(i=>i.style.display!=='none');
+  curIdx=idx;
+  lbImg.src=visItems[curIdx].querySelector('img').src;
+  lbCap.textContent=visItems[curIdx].querySelector('img').alt;
+  lb.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLB(){lb.classList.remove('open');document.body.style.overflow='';}
+
+galleryItems.forEach((item,i)=>item.addEventListener('click',()=>{
+  visItems=[...galleryItems].filter(it=>it.style.display!=='none');
+  openLB(visItems.indexOf(item));
+}));
+document.getElementById('lb-close').addEventListener('click',closeLB);
+lb.addEventListener('click',e=>{if(e.target===lb)closeLB();});
+document.getElementById('lb-prev').addEventListener('click',()=>openLB((curIdx-1+visItems.length)%visItems.length));
+document.getElementById('lb-next').addEventListener('click',()=>openLB((curIdx+1)%visItems.length));
+document.addEventListener('keydown',e=>{
+  if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')closeLB();
+  if(e.key==='ArrowLeft')openLB((curIdx-1+visItems.length)%visItems.length);
+  if(e.key==='ArrowRight')openLB((curIdx+1)%visItems.length);
+});
+</script>
+</body>
+</html>
+```
